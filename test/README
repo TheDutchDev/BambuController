@@ -1,0 +1,3 @@
+# Bambu Controller
+
+A fairly basic project with loosely coupled components to receive data from a bambu controller and do whatever with it through an event-based system.

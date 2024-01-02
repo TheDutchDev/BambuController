@@ -1,0 +1,7 @@
+## Version 1.0.0
+
+* Implemented MQTT connection to bambu printers
+* Implemented LED functionality
+* Implemented HTTP & Websocket server
+* Implemented Wifi connectivity
+* Implemented Filesystem operations
