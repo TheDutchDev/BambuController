@@ -11,6 +11,7 @@
 #include <server.h>
 #include <bambu.h>
 #include <led.h>
+#include <ledstrip.h>
 #include <factorydefaults.h>
 
 Network *network = new Network();
@@ -18,6 +19,8 @@ FileSystem *fileSystem = new FileSystem(networkConfig, printerConfig, systemConf
 EspWebServer *server = new EspWebServer(80, systemConfig);
 Bambu *bambu = new Bambu(printerConfig, printerStatus);
 FactoryDefaults *factoryDefaults = new FactoryDefaults(printerStatus, networkConfig, printerConfig, systemConfig);
+
+LedStrip *ledStrip;
 
 Led *ceilingLed;
 

@@ -26,6 +26,8 @@ void Core1(void *parameter)
 void setup()
 {
     Serial.begin(115200);
+    ledStrip = new LedStrip(LED_STRIP_RED_PIN, LED_STRIP_GREEN_PIN, LED_STRIP_BLUE_PIN, LED_STRIP_WHITE_PIN, LED_STRIP_YELLOW_PIN);
+    ledStrip->setColor(0, 0, 0, 0, 0, 0);
 
     if (!fileSystem->mount())
     {
@@ -34,11 +36,9 @@ void setup()
         return;
     }
 
-    // fileSystem->erase();
-
     if (!fileSystem->load())
     {
-        network->setupAccessPoint("Bambu Controller", "bambu123");
+        network->setupAccessPoint(AP_SSID, AP_PASSWORD);
         factoryDefaults->reload();
     }
     else
@@ -46,16 +46,15 @@ void setup()
         systemConfig->state = EState::Active;
         network->connect(networkConfig->ssid, networkConfig->password, networkConfig->hostName);
 
-        ceilingLed = new Led(CEILING_LED_PIN);
-        ceilingLed->trigger(true);
-
         bambu->setup();
         bambu->on("data", std::bind(&EspWebServer::onBambuPrinterData, server, _1));
+        bambu->on("data", std::bind(&LedStrip::onBambuPrinterData, server, _1));
 
         fileSystem->save();
     }
 
     server->on("update", std::bind(&FileSystem::update, fileSystem, _1));
+    server->on("factory-reset", std::bind(&FileSystem::onFactoryReset, fileSystem, _1));
 
     server->begin();
     Init(Core0, Core1);
@@ -72,18 +71,22 @@ void runSetupLoop()
     Serial.println(WiFi.softAPgetHostname());
 
     network->loop();
+    ledStrip->blink(1000);
 }
 
 void runActiveLoop()
 {
-    if (!bambu->connected())
+    if (printerConfig->isConfigured())
     {
-        Serial.println("reconnecting bambu");
-        bambu->reconnect();
-    }
+        if (!bambu->connected())
+        {
+            Serial.println("reconnecting bambu");
+            bambu->reconnect();
+        }
 
-    // delay(1000);
-    bambu->loop();
+        // delay(1000);
+        bambu->loop();
+    }
 }
 
 void loop()

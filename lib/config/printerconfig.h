@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
+#include <cstring>
 
 class PrinterConfig
 {
@@ -37,6 +38,11 @@ public:
         strcpy(ipAddress, "");
         strcpy(accessCode, "");
         strcpy(serialNumber, "");
+    }
+
+    bool isConfigured()
+    {
+        return std::strcmp(ipAddress, "") != 0 && std::strcmp(accessCode, "") != 0 && std::strcmp(serialNumber, "") != 0;
     }
 
 private:

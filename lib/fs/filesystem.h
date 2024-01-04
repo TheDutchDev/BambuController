@@ -18,6 +18,8 @@ public:
     void erase();
     void update(DynamicJsonDocument json);
 
+    void onFactoryReset(DynamicJsonDocument json);
+
 private:
     void readJson(DynamicJsonDocument &jsonDoc);
 

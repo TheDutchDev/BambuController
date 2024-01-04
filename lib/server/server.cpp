@@ -27,10 +27,15 @@ void EspWebServer::begin()
 
     server.on("/api/info", HTTP_GET, std::bind(&EspWebServer::onApiInfo, this, _1));
     server.on("/api/reboot", HTTP_GET, std::bind(&EspWebServer::onReboot, this, _1));
+    server.on("/api/factory-reset", HTTP_GET, std::bind(&EspWebServer::onFactoryReset, this, _1));
 
     AsyncCallbackJsonWebHandler *handler = new AsyncCallbackJsonWebHandler("/api/update", std::bind(&EspWebServer::onUpdate, this, _1, _2));
     handler->setMethod(HTTP_POST);
     server.addHandler(handler);
+
+    // AsyncCallbackJsonWebHandler *handler = new AsyncCallbackJsonWebHandler("/api/leds/override", std::bind(&EspWebServer::onOverrideLedColor, this, _1, _2));
+    // handler->setMethod(HTTP_POST);
+    // server.addHandler(handler);
 
     server.onNotFound(std::bind(&EspWebServer::onNotFound, this, _1));
 
@@ -64,9 +69,15 @@ void EspWebServer::onApiInfo(AsyncWebServerRequest *request)
     request->send(200, "text/json", jsonString);
 }
 
+void EspWebServer::onFactoryReset(AsyncWebServerRequest *request)
+{
+    request->send(200);
+    emit("factory-reset", DynamicJsonDocument(0));
+}
+
 void EspWebServer::onReboot(AsyncWebServerRequest *request)
 {
-    request->send(200, "text/plain", "rebooting!");
+    request->send(200);
     ws.closeAll();
     ESP.restart();
 }
@@ -90,6 +101,28 @@ void EspWebServer::onUpdate(AsyncWebServerRequest *request, JsonVariant &json)
     }
 
     emit("update", jsonDoc);
+    request->send(200, "text/plain", "done!");
+}
+
+void EspWebServer::onOverrideLedColor(AsyncWebServerRequest *request, JsonVariant &json)
+{
+    // Print the received JSON data
+    Serial.println("on override led color");
+    serializeJson(json, Serial);
+    Serial.println();
+
+    DynamicJsonDocument jsonDoc(MAX_HTTP_POST_JSON_BODY_SIZE);
+
+    if (json.is<JsonArray>())
+    {
+        jsonDoc = json.as<JsonArray>();
+    }
+    else if (json.is<JsonObject>())
+    {
+        jsonDoc = json.as<JsonObject>();
+    }
+
+    emit("overrideLeds", jsonDoc);
     request->send(200, "text/plain", "done!");
 }
 

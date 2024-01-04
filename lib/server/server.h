@@ -28,6 +28,8 @@ private:
     void onUpdate(AsyncWebServerRequest *request, JsonVariant &json);
     void onNotFound(AsyncWebServerRequest *request);
     void onReboot(AsyncWebServerRequest *request);
+    void onOverrideLedColor(AsyncWebServerRequest *request, JsonVariant &json);
+    void onFactoryReset(AsyncWebServerRequest *request);
 
     AsyncWebServer server;
     AsyncWebSocket ws;

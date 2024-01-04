@@ -105,3 +105,9 @@ void FileSystem::update(DynamicJsonDocument json)
     readJson(json);
     save();
 }
+
+void FileSystem::onFactoryReset(DynamicJsonDocument json)
+{
+    erase();
+    ESP.restart();
+}
