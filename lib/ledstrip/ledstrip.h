@@ -2,6 +2,8 @@
 #define LEDSTRIP_H
 
 #include <Arduino.h>
+#include <ArduinoJson.h>
+#include <printerstatus.h>
 
 typedef struct
 {
@@ -15,7 +17,7 @@ typedef struct
 class LedStrip
 {
 public:
-    LedStrip(int redPin, int greenPin, int bluePin, int whitePin, int yellowPin);
+    LedStrip(PrinterStatus *printerStatus, int redPin, int greenPin, int bluePin, int whitePin, int yellowPin);
     void setColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t white, uint8_t yellow, float brightness);
     void transitionToColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t white, uint8_t yellow, float brightness, int durationMs);
 
@@ -27,7 +29,6 @@ public:
     void blink(int delayMs);
 
     void onBambuPrinterData(DynamicJsonDocument jsonDoc);
-    ;
 
 private:
     int toBrightness(int color, float brightness);
@@ -44,6 +45,7 @@ private:
     uint _blinkMillis;
 
     LedStripColors _colors;
+    PrinterStatus *_printerStatus;
 };
 
 #endif

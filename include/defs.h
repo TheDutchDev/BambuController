@@ -10,9 +10,10 @@
 #define AP_PASSWORD "bambu123"
 
 /**
- * General pins
+ * Bento Box pin
  */
-#define CEILING_LED_PIN 21
+#define BENTO_BOX_PIN 12               // TODO: change
+#define BENTO_BOX_OFF_DELAY_MS 600000U // 10 minutes
 
 /**
  * Led Strip pins

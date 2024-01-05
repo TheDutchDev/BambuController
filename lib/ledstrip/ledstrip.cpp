@@ -1,7 +1,8 @@
 #include <ledstrip.h>
 
-LedStrip::LedStrip(int redPin, int greenPin, int bluePin, int whitePin, int yellowPin)
-    : _redPin(redPin),
+LedStrip::LedStrip(PrinterStatus *printerStatus, int redPin, int greenPin, int bluePin, int whitePin, int yellowPin)
+    : _printerStatus(printerStatus),
+      _redPin(redPin),
       _greenPin(greenPin),
       _bluePin(bluePin),
       _whitePin(whitePin),
@@ -129,4 +130,26 @@ void LedStrip::updateLedStrip()
 
 void LedStrip::onBambuPrinterData(DynamicJsonDocument jsonDoc)
 {
+    switch (_printerStatus->state)
+    {
+    case EPrinterState::Finished:
+        transitionToColor(0, 255, 0, 0, 0, .7, 1000);
+        break;
+
+    case EPrinterState::Slicing:
+        transitionToColor(0, 0, 0, 0, 255, .7, 1000);
+        break;
+
+    case EPrinterState::Prepare:
+        transitionToColor(255, 0, 255, 0, 0, .7, 1000);
+        break;
+
+    case EPrinterState::Running:
+        transitionToColor(0, 0, 0, 255, 0, .7, 1000);
+        break;
+
+    case EPrinterState::Failed:
+        transitionToColor(255, 0, 0, 0, 0, .7, 1000);
+        break;
+    }
 }

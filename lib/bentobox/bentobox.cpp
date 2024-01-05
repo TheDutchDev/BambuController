@@ -1,28 +1,62 @@
 #include <bentobox.h>
 
-BentoBox::BentoBox(int pinNumber) : pinNumber(pinNumber)
+BentoBox::BentoBox(PrinterStatus *printerStatus, int pinNumber, uint64_t turnOffDelayMs)
+    : _printerStatus(printerStatus),
+      _pinNumber(pinNumber),
+      _turnOffDelayMs(turnOffDelayMs),
+      _lastRequiredAtMs(0)
 {
-    pinMode(pinNumber, OUTPUT);
+    pinMode(_pinNumber, OUTPUT);
 }
 
 void BentoBox::start()
 {
-    digitalWrite(pinNumber, HIGH);
+    digitalWrite(_pinNumber, HIGH);
+    _lastRequiredAtMs = 0;
 }
 
 void BentoBox::stop()
 {
-    digitalWrite(pinNumber, LOW);
+    digitalWrite(_pinNumber, LOW);
 }
 
 EBentoBoxState BentoBox::state()
 {
-    int pinState = digitalRead(pinNumber);
+    int pinState = digitalRead(_pinNumber);
     return pinState == HIGH ? EBentoBoxState::On : EBentoBoxState::Off;
 }
 
-void BentoBox::onBambuPrinterData(DynamicJsonDocument jsonDoc)
+void BentoBox::stopIfTimeExpired()
 {
-    if (state() == EBentoBoxState::Off)
+    if (_lastRequiredAtMs == 0)
         return;
+
+    if (millis() - _lastRequiredAtMs < _turnOffDelayMs)
+        return;
+
+    _lastRequiredAtMs = 0;
+    stop();
+}
+
+void BentoBox::onBambuPrinterData(DynamicJsonDocument json)
+{
+    // Only turn on bento box for non-PLA filament types
+    if (_printerStatus->filamentStatus->type == EFilamentType::PLA)
+    {
+        if (state() == EBentoBoxState::Off)
+            return;
+
+        if (_lastRequiredAtMs != 0)
+            return;
+
+        _lastRequiredAtMs = millis();
+    }
+    else
+    {
+        if (state() == EBentoBoxState::On)
+            return;
+
+        _lastRequiredAtMs = 0;
+        start();
+    }
 }

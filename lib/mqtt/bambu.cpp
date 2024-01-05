@@ -39,7 +39,7 @@ void Bambu::onMqttMessage(char *topic, uint8_t *payload, unsigned int length)
     auto error = deserializeJson(jsonDoc, payload, length, DeserializationOption::Filter(getPayloadFilter()));
     if (!error)
     {
-        Bambu::onMqttJsonDataReceived(jsonDoc);
+        onMqttJsonDataReceived(jsonDoc);
     }
     else
     {
@@ -53,6 +53,7 @@ void Bambu::onMqttJsonDataReceived(DynamicJsonDocument jsonDocument)
     // serializeJson(jsonDocument, Serial);
     // Serial.println();
 
+    printerStatus->update(jsonDocument);
     emit("data", jsonDocument);
 }
 

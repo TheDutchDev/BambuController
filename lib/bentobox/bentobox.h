@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
+#include <PrinterStatus.h>
 
 enum class EBentoBoxState
 {
@@ -13,14 +14,18 @@ enum class EBentoBoxState
 class BentoBox
 {
 public:
-    BentoBox(int pinNumber);
+    BentoBox(PrinterStatus *printerStatus, int pinNumber, uint64_t turnOffDelayMs);
     void start();
     void stop();
     EBentoBoxState state();
     void onBambuPrinterData(DynamicJsonDocument jsonDoc);
+    void stopIfTimeExpired();
 
 private:
-    int pinNumber;
+    int _pinNumber;
+    uint64_t _lastRequiredAtMs;
+    uint64_t _turnOffDelayMs;
+    PrinterStatus *_printerStatus;
 };
 
 #endif

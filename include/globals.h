@@ -12,6 +12,7 @@
 #include <bambu.h>
 #include <led.h>
 #include <ledstrip.h>
+#include <bentobox.h>
 #include <factorydefaults.h>
 
 Network *network = new Network();
@@ -20,6 +21,7 @@ EspWebServer *server = new EspWebServer(80, systemConfig);
 Bambu *bambu = new Bambu(printerConfig, printerStatus);
 FactoryDefaults *factoryDefaults = new FactoryDefaults(printerStatus, networkConfig, printerConfig, systemConfig);
 
+BentoBox *bentoBox;
 LedStrip *ledStrip;
 
 Led *ceilingLed;

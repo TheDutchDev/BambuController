@@ -26,7 +26,7 @@ void Core1(void *parameter)
 void setup()
 {
     Serial.begin(115200);
-    ledStrip = new LedStrip(LED_STRIP_RED_PIN, LED_STRIP_GREEN_PIN, LED_STRIP_BLUE_PIN, LED_STRIP_WHITE_PIN, LED_STRIP_YELLOW_PIN);
+    ledStrip = new LedStrip(printerStatus, LED_STRIP_RED_PIN, LED_STRIP_GREEN_PIN, LED_STRIP_BLUE_PIN, LED_STRIP_WHITE_PIN, LED_STRIP_YELLOW_PIN);
     ledStrip->setColor(0, 0, 0, 0, 0, 0);
 
     if (!fileSystem->mount())
@@ -48,9 +48,11 @@ void setup()
 
         bambu->setup();
         bambu->on("data", std::bind(&EspWebServer::onBambuPrinterData, server, _1));
-        bambu->on("data", std::bind(&LedStrip::onBambuPrinterData, server, _1));
+        bambu->on("data", std::bind(&LedStrip::onBambuPrinterData, ledStrip, _1));
 
         fileSystem->save();
+
+        bentoBox = new BentoBox(printerStatus, BENTO_BOX_PIN, BENTO_BOX_OFF_DELAY_MS);
     }
 
     server->on("update", std::bind(&FileSystem::update, fileSystem, _1));
@@ -86,7 +88,11 @@ void runActiveLoop()
 
         // delay(1000);
         bambu->loop();
+        bentoBox->stopIfTimeExpired();
     }
+
+    if (printerStatus->online && printerStatus->state == EPrinterState::Idle)
+        ledStrip->blink(5000);
 }
 
 void loop()
