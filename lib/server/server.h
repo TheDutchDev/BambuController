@@ -31,6 +31,8 @@ private:
     void onOverrideLedColor(AsyncWebServerRequest *request, JsonVariant &json);
     void onFactoryReset(AsyncWebServerRequest *request);
 
+    String getAllConfigAndStatusAsString();
+
     AsyncWebServer server;
     AsyncWebSocket ws;
 

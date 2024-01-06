@@ -23,9 +23,9 @@ public:
     bool ledState = true;
     bool online = false;
     EPrinterState state = EPrinterState::Idle;
+    uint8_t percentageCompleted = 0;
 
-    uint8_t currentTrayId;
-    uint8_t previousTrayId;
+    uint8_t currentTrayId = 0;
     FilamentStatus *filamentStatus;
 
     PrinterStatus()
@@ -40,6 +40,7 @@ public:
         json["printer"]["status"]["ledState"] = ledState;
         json["printer"]["status"]["online"] = online;
         json["printer"]["status"]["state"] = (int)state;
+        json["printer"]["status"]["percentageCompleted"] = percentageCompleted;
 
         filamentStatus->toJson(json);
     }
@@ -71,6 +72,7 @@ public:
         stage = 0;
         ledState = true;
         online = false;
+        percentageCompleted = 0;
         updateState();
 
         filamentStatus->resetToDefaults();
@@ -104,6 +106,11 @@ public:
                     break;
                 }
             }
+        }
+
+        if (json["print"].containsKey("mc_percent"))
+        {
+            percentageCompleted = json["print"]["mc_percent"].as<uint8_t>();
         }
 
         filamentStatus->update(json);

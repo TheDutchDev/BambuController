@@ -44,13 +44,13 @@ public:
             return;
 
         uint8_t currentTrayId = json["print"]["ams"]["tray_now"].as<uint8_t>();
-        JsonObject currentTrayData = getTrayData(currentTrayId, json);
+
+        uint8_t amsId = floor(currentTrayId / 4);
+        uint8_t amsTrayId = floor(currentTrayId % 4);
+
+        auto currentTrayData = json["print"]["ams"]["ams"][amsId]["tray"][amsTrayId];
 
         //(homeflag >> 23) & 0x01
-        Serial.print("current tray ID: ");
-        Serial.println(currentTrayId);
-        serializeJson(currentTrayData, Serial);
-        Serial.println();
 
         if (currentTrayData.containsKey("tray_color"))
             strcpy(color, currentTrayData["tray_color"]);
@@ -65,14 +65,6 @@ public:
     }
 
 private:
-    JsonObject getTrayData(uint8_t trayId, DynamicJsonDocument &json)
-    {
-        uint8_t amsId = floor(trayId / 4);
-        uint8_t amsTrayId = floor(trayId % 4);
-
-        return json["print"]["ams"]["ams"][amsId]["tray"][amsTrayId].to<JsonObject>();
-    }
-
     void convertType(const char *trayType)
     {
         strcpy(typeString, trayType);

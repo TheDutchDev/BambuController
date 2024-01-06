@@ -57,15 +57,7 @@ void EspWebServer::onNotFound(AsyncWebServerRequest *request)
 
 void EspWebServer::onApiInfo(AsyncWebServerRequest *request)
 {
-    DynamicJsonDocument json(2048);
-    systemConfig->toJson(json);
-    printerConfig->toJson(json);
-    printerStatus->toJson(json);
-    networkConfig->toJson(json);
-
-    String jsonString;
-    serializeJson(json, jsonString);
-
+    String jsonString = getAllConfigAndStatusAsString();
     request->send(200, "text/json", jsonString);
 }
 
@@ -234,7 +226,22 @@ void EspWebServer::broadcastWs(const char *payload)
 
 void EspWebServer::onBambuPrinterData(DynamicJsonDocument jsonDoc)
 {
+    String jsonString = getAllConfigAndStatusAsString();
     // String jsonString;
     // serializeJson(jsonDoc, jsonString);
-    // ws.textAll(jsonString);
+    ws.textAll(jsonString);
+}
+
+String EspWebServer::getAllConfigAndStatusAsString()
+{
+    DynamicJsonDocument json(2048);
+    systemConfig->toJson(json);
+    printerConfig->toJson(json);
+    printerStatus->toJson(json);
+    networkConfig->toJson(json);
+
+    String jsonString;
+    serializeJson(json, jsonString);
+
+    return jsonString;
 }
