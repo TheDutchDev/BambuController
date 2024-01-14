@@ -29,6 +29,8 @@ void setup()
     ledStrip = new LedStrip(printerStatus, LED_STRIP_RED_PIN, LED_STRIP_GREEN_PIN, LED_STRIP_BLUE_PIN, LED_STRIP_WHITE_PIN, LED_STRIP_YELLOW_PIN);
     ledStrip->setColor(0, 0, 0, 0, 0, 0);
 
+    ota->setup();
+
     if (!fileSystem->mount())
     {
         Serial.println("[FATAL] Failed to mount filesystem!");
@@ -107,4 +109,6 @@ void loop()
         runActiveLoop();
         break;
     }
+
+    ota->loop();
 }

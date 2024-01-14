@@ -2,6 +2,7 @@
 #define DEFS_H
 
 #define FIRMWARE_VERSION "1.0.0"
+#define HARDWARE_VERSION "custom-board-v1.0.0"
 
 /**
  * Access point

@@ -14,12 +14,14 @@
 #include <ledstrip.h>
 #include <bentobox.h>
 #include <factorydefaults.h>
+#include <ota.h>
 
 Network *network = new Network();
 FileSystem *fileSystem = new FileSystem(networkConfig, printerConfig, systemConfig);
 EspWebServer *server = new EspWebServer(80, systemConfig);
 Bambu *bambu = new Bambu(printerConfig, printerStatus);
 FactoryDefaults *factoryDefaults = new FactoryDefaults(printerStatus, networkConfig, printerConfig, systemConfig);
+Ota *ota = new Ota();
 
 BentoBox *bentoBox;
 LedStrip *ledStrip;

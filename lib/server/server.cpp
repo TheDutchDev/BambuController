@@ -1,11 +1,5 @@
 #include <server.h>
-
-using std::placeholders::_1;
-using std::placeholders::_2;
-using std::placeholders::_3;
-using std::placeholders::_4;
-using std::placeholders::_5;
-using std::placeholders::_6;
+#include <namespaces.h>
 
 EspWebServer::EspWebServer(uint16_t port, SystemConfig *sysConf)
     : server(port),
