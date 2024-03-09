@@ -11,14 +11,14 @@ public:
     char password[32];
     char hostName[32];
 
-    void toJson(DynamicJsonDocument &json)
+    void toJson(JsonDocument &json)
     {
         json["network"]["config"]["ssid"] = ssid;
         json["network"]["config"]["password"] = password;
         json["network"]["config"]["hostName"] = hostName;
     }
 
-    void fromJson(DynamicJsonDocument json)
+    void fromJson(JsonDocument json)
     {
         if (!json.containsKey("network") || !json["network"].containsKey("config"))
             return;
@@ -36,7 +36,7 @@ public:
     }
 
 private:
-    void writeJsonToDest(DynamicJsonDocument &json, const char *key, char *destination)
+    void writeJsonToDest(JsonDocument &json, const char *key, char *destination)
     {
         if (!json["network"]["config"].containsKey(key))
             return;

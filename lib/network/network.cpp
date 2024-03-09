@@ -13,7 +13,7 @@ void Network::setupAccessPoint(const char *ssid, const char *password)
     WiFi.softAP(ssid, password);
 }
 
-void Network::connect(const char *ssid, const char *password, const char *hostName)
+bool Network::connect(const char *ssid, const char *password, const char *hostName)
 {
     int delayMs = 500;
     int attempts = 60;
@@ -31,10 +31,7 @@ void Network::connect(const char *ssid, const char *password, const char *hostNa
 
         if (attempts <= 0)
         {
-            Serial.println("restarting..");
-            WiFi.disconnect();
-            ESP.restart();
-            break;
+            return false;
         }
     }
     Serial.print("Connected on IP: ");
@@ -48,8 +45,10 @@ void Network::connect(const char *ssid, const char *password, const char *hostNa
     if (!MDNS.begin(hostName))
     {
         Serial.println("Error setting up MDNS responder!");
-        return;
+        return false;
     }
+
+    return true;
 }
 
 void Network::loop()

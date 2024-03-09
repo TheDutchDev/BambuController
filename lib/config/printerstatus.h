@@ -33,7 +33,7 @@ public:
         filamentStatus = new FilamentStatus();
     }
 
-    void toJson(DynamicJsonDocument &json)
+    void toJson(JsonDocument &json)
     {
         json["printer"]["status"]["gcodeState"] = gcodeState;
         json["printer"]["status"]["stage"] = stage;
@@ -45,7 +45,7 @@ public:
         filamentStatus->toJson(json);
     }
 
-    // void fromJson(DynamicJsonDocument &json)
+    // void fromJson(JsonDocument &json)
     // {
     //     if (!json.containsKey("printer") || !json["printer"].containsKey("status"))
     //         return;
@@ -78,7 +78,7 @@ public:
         filamentStatus->resetToDefaults();
     }
 
-    void update(DynamicJsonDocument &json)
+    void update(JsonDocument &json)
     {
         if (!json.containsKey("print"))
             return;

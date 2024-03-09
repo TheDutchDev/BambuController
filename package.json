@@ -1,0 +1,30 @@
+{
+  "name": "bambucontroller",
+  "version": "1.0.0",
+  "description": "Info TBA",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "del": "^7.1.0",
+    "fs": "^0.0.1-security",
+    "gulp-base64-favicon": "^1.0.3",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-css-base64": "^2.0.0",
+    "gulp-gzip": "^1.4.2",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-inline": "^0.1.3",
+    "gulp-uglify-es": "^3.0.0"
+  }
+}

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
-import argparse, os, json, re
+import argparse, os, json, re, shutil
+
+print('Running release build script...' )
 
 #what boards / build targets to include in the release
 boards = [
-	"ESP32-WROVER",
+	"esp32dev",
 ]
 
 if __name__ == '__main__':
@@ -52,19 +54,15 @@ if __name__ == '__main__':
 			# os.system(cmd)
 
 			#copy our fimrware to releases directory
-			cmd = f'cp .pio/build/{board}/firmware.bin releases/{board}-{version}.bin'
-			#print (cmd)
-			os.system(cmd)
+			shutil.copyfile(f'build/{board}/firmware.bin', f'releases/{board}-{version}.bin')
 
 			#keep our ELF file for debugging later on....
-			cmd = f'cp .pio/build/{board}/firmware.elf releases/{board}-{version}.elf'
-			#print (cmd)
-			os.system(cmd)
+			shutil.copyfile(f'build/{board}/firmware.elf', f'releases/{board}-{version}.elf')
 
 		#write our config json file
 		config_str = json.dumps(config, indent=4)
 		with open("firmware.json", "w") as text_file:
-		    text_file.write(config_str)
+			text_file.write(config_str)
 
 		#some info to the user to finish the release
 		print("Build complete.\n")

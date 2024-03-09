@@ -9,7 +9,7 @@
 #include <config.h>
 #include <eventemitter.h>
 
-class Bambu : public Mqtt, public EventEmitter<DynamicJsonDocument>
+class Bambu : public Mqtt, public EventEmitter<JsonDocument>
 {
 public:
     Bambu(PrinterConfig *printer, PrinterStatus *status);
@@ -21,8 +21,8 @@ protected:
     void onConnected() override;
 
 private:
-    void onMqttJsonDataReceived(DynamicJsonDocument jsonDocument);
-    StaticJsonDocument<64> getPayloadFilter();
+    void onMqttJsonDataReceived(JsonDocument jsonDocument);
+    JsonDocument getPayloadFilter();
 
     void subscribeToTopics();
 

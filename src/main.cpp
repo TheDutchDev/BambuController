@@ -46,7 +46,13 @@ void setup()
     else
     {
         systemConfig->state = EState::Active;
-        network->connect(networkConfig->ssid, networkConfig->password, networkConfig->hostName);
+        if (!network->connect(networkConfig->ssid, networkConfig->password, networkConfig->hostName))
+        {
+            Serial.println("wiping and restarting..");
+            fileSystem->erase();
+            WiFi.disconnect();
+            ESP.restart();
+        }
 
         bambu->setup();
         bambu->on("data", std::bind(&EspWebServer::onBambuPrinterData, server, _1));

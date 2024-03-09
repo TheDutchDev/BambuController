@@ -18,7 +18,7 @@ public:
     void start();
     void stop();
     EBentoBoxState state();
-    void onBambuPrinterData(DynamicJsonDocument jsonDoc);
+    void onBambuPrinterData(JsonDocument jsonDoc);
     void stopIfTimeExpired();
 
 private:

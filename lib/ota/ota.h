@@ -4,7 +4,7 @@
 #include "server.h"
 #include <esp32FOTA.hpp>
 
-// // my key for future firmware signing
+// my key for future firmware signing
 // const char *public_key = R"PUBLIC_KEY(
 // -----BEGIN PUBLIC KEY-----
 // MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAjsPaBVvAoSlNEdxLnKl5

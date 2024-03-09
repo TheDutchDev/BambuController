@@ -28,7 +28,7 @@ public:
     void forceToYellow(uint8_t value, float brightness);
     void blink(int delayMs);
 
-    void onBambuPrinterData(DynamicJsonDocument jsonDoc);
+    void onBambuPrinterData(JsonDocument jsonDoc);
 
 private:
     int toBrightness(int color, float brightness);

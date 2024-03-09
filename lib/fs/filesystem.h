@@ -16,14 +16,14 @@ public:
     bool load();
     bool mount();
     void erase();
-    void update(DynamicJsonDocument json);
+    void update(JsonDocument json);
 
-    void onFactoryReset(DynamicJsonDocument json);
+    void onFactoryReset(JsonDocument json);
 
 private:
-    void readJson(DynamicJsonDocument &jsonDoc);
+    void readJson(JsonDocument &jsonDoc);
 
-    DynamicJsonDocument writeJson();
+    JsonDocument writeJson();
 
     const char *filePath;
     PrinterConfig *printerConfig;

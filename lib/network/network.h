@@ -9,7 +9,7 @@ class Network
 {
 public:
     Network();
-    void connect(const char *ssid, const char *password, const char *hostName);
+    bool connect(const char *ssid, const char *password, const char *hostName);
     void setupAccessPoint(const char *ssid = "bambu", const char *password = "bambu123");
     void loop();
 };

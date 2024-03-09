@@ -128,7 +128,7 @@ void LedStrip::updateLedStrip()
     analogWrite(_yellowPin, _colors.yellow);
 }
 
-void LedStrip::onBambuPrinterData(DynamicJsonDocument jsonDoc)
+void LedStrip::onBambuPrinterData(JsonDocument jsonDoc)
 {
     switch (_printerStatus->state)
     {

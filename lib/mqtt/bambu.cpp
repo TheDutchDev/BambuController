@@ -34,7 +34,7 @@ void Bambu::onConnected()
 
 void Bambu::onMqttMessage(char *topic, uint8_t *payload, unsigned int length)
 {
-    DynamicJsonDocument jsonDoc(MAX_DOCUMENT_SIZE);
+    JsonDocument jsonDoc;
 
     auto error = deserializeJson(jsonDoc, payload, length, DeserializationOption::Filter(getPayloadFilter()));
     if (!error)
@@ -47,7 +47,7 @@ void Bambu::onMqttMessage(char *topic, uint8_t *payload, unsigned int length)
     }
 }
 
-void Bambu::onMqttJsonDataReceived(DynamicJsonDocument jsonDocument)
+void Bambu::onMqttJsonDataReceived(JsonDocument jsonDocument)
 {
     // Serial.print("json doc received: ");
     // serializeJson(jsonDocument, Serial);
@@ -57,9 +57,9 @@ void Bambu::onMqttJsonDataReceived(DynamicJsonDocument jsonDocument)
     emit("data", jsonDocument);
 }
 
-StaticJsonDocument<64> Bambu::getPayloadFilter()
+JsonDocument Bambu::getPayloadFilter()
 {
-    StaticJsonDocument<64> payloadFilter;
+    JsonDocument payloadFilter;
     payloadFilter["print"] = true;
     return payloadFilter;
 }

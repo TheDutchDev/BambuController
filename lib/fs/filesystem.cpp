@@ -12,7 +12,7 @@ bool FileSystem::save()
 {
     Serial.println("Saving to filesystem...");
 
-    DynamicJsonDocument json = writeJson();
+    JsonDocument json = writeJson();
     File file = LittleFS.open(filePath, "w", true);
 
     if (!file)
@@ -47,7 +47,7 @@ bool FileSystem::load()
     std::unique_ptr<char[]> buf(new char[size]);
     file.readBytes(buf.get(), size);
 
-    DynamicJsonDocument json(FS_MAX_JSON_SIZE);
+    JsonDocument json;
 
     auto deserializeError = deserializeJson(json, buf.get());
 
@@ -83,7 +83,7 @@ bool FileSystem::mount()
     return true;
 }
 
-void FileSystem::readJson(DynamicJsonDocument &json)
+void FileSystem::readJson(JsonDocument &json)
 {
     systemConfig->fromJson(json);
     printerConfig->fromJson(json);
@@ -91,22 +91,22 @@ void FileSystem::readJson(DynamicJsonDocument &json)
     Serial.println("Loaded config");
 }
 
-DynamicJsonDocument FileSystem::writeJson()
+JsonDocument FileSystem::writeJson()
 {
-    DynamicJsonDocument json(FS_MAX_JSON_SIZE);
+    JsonDocument json;
     systemConfig->toJson(json);
     printerConfig->toJson(json, true);
     networkConfig->toJson(json);
     return json;
 }
 
-void FileSystem::update(DynamicJsonDocument json)
+void FileSystem::update(JsonDocument json)
 {
     readJson(json);
     save();
 }
 
-void FileSystem::onFactoryReset(DynamicJsonDocument json)
+void FileSystem::onFactoryReset(JsonDocument json)
 {
     erase();
     ESP.restart();

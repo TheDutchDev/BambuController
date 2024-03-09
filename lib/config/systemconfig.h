@@ -22,13 +22,13 @@ public:
     EState state;
     EMode mode;
 
-    void toJson(DynamicJsonDocument &json)
+    void toJson(JsonDocument &json)
     {
         json["system"]["config"]["state"] = (int)state;
         json["system"]["config"]["mode"] = (int)mode;
     }
 
-    void fromJson(DynamicJsonDocument json)
+    void fromJson(JsonDocument json)
     {
         if (!json.containsKey("system") || !json["system"].containsKey("config"))
             return;

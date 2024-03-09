@@ -23,7 +23,7 @@ public:
     EFilamentType type;
     char typeString[32];
 
-    void toJson(DynamicJsonDocument &json)
+    void toJson(JsonDocument &json)
     {
         json["printer"]["filament"]["status"]["color"] = color;
         json["printer"]["filament"]["status"]["type"] = (int)type;
@@ -35,7 +35,7 @@ public:
         type = EFilamentType::PLA;
     }
 
-    void update(DynamicJsonDocument &json)
+    void update(JsonDocument &json)
     {
         if (!json.containsKey("print") ||
             !json["print"].containsKey("ams") ||

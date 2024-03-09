@@ -12,7 +12,7 @@ public:
     char accessCode[9];
     char serialNumber[16];
 
-    void toJson(DynamicJsonDocument &json, bool includeSensitiveInfo = false)
+    void toJson(JsonDocument &json, bool includeSensitiveInfo = false)
     {
         json["printer"]["config"]["ipAddress"] = ipAddress;
 
@@ -23,7 +23,7 @@ public:
         }
     }
 
-    void fromJson(DynamicJsonDocument json)
+    void fromJson(JsonDocument json)
     {
         if (!json.containsKey("printer") || !json["printer"].containsKey("config"))
             return;
@@ -46,7 +46,7 @@ public:
     }
 
 private:
-    void writeJsonToDest(DynamicJsonDocument &json, const char *key, char *destination)
+    void writeJsonToDest(JsonDocument &json, const char *key, char *destination)
     {
         if (!json["printer"]["config"].containsKey(key))
             return;

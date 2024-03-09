@@ -1,6 +1,8 @@
 #include <server.h>
 #include <namespaces.h>
 
+char last_modified[50];
+
 EspWebServer::EspWebServer(uint16_t port, SystemConfig *sysConf)
     : server(port),
       ws("/ws"),
@@ -17,8 +19,12 @@ void EspWebServer::begin()
     ws.onEvent(std::bind(&EspWebServer::onWebSocketEvent, this, _1, _2, _3, _4, _5, _6));
     server.addHandler(&ws);
 
-    server.serveStatic("/", LittleFS, "/www/").setDefaultFile("index.html");
 
+
+    // Use to serve static HTML over filesystem. Not recommended for OTA
+//    server.serveStatic("/", LittleFS, "/www/").setDefaultFile("index.html");
+
+    server.on("/", HTTP_GET, std::bind(&EspWebServer::onMainPage, this, _1));
     server.on("/api/info", HTTP_GET, std::bind(&EspWebServer::onApiInfo, this, _1));
     server.on("/api/reboot", HTTP_GET, std::bind(&EspWebServer::onReboot, this, _1));
     server.on("/api/factory-reset", HTTP_GET, std::bind(&EspWebServer::onFactoryReset, this, _1));
@@ -49,6 +55,31 @@ void EspWebServer::onNotFound(AsyncWebServerRequest *request)
     }
 }
 
+void EspWebServer::onMainPage(AsyncWebServerRequest *request)
+{
+    if (request->header("If-Modified-Since").indexOf(last_modified) > 0)
+        return request->send(304);
+
+    if (request->header("If-None-Match").equals(index_html_gz_sha))
+        return request->send(304);
+
+    AsyncWebServerResponse *response = request->beginResponse_P(
+        200,
+        "gzip",
+        index_html_gz,
+        index_html_gz_len
+    );
+
+    // Tell the browser the ontent is Gzipped
+    response->addHeader("Content-Encoding", "gzip");
+
+    // And set the last-modified datetime so we can check if we need to send it again next time or not
+    response->addHeader("Last-Modified", last_modified);
+    response->addHeader("ETag", index_html_gz_sha);
+
+    request->send( response );
+}
+
 void EspWebServer::onApiInfo(AsyncWebServerRequest *request)
 {
     String jsonString = getAllConfigAndStatusAsString();
@@ -57,8 +88,9 @@ void EspWebServer::onApiInfo(AsyncWebServerRequest *request)
 
 void EspWebServer::onFactoryReset(AsyncWebServerRequest *request)
 {
+    JsonDocument jsonDoc;
     request->send(200);
-    emit("factory-reset", DynamicJsonDocument(0));
+    emit("factory-reset", jsonDoc );
 }
 
 void EspWebServer::onReboot(AsyncWebServerRequest *request)
@@ -75,7 +107,7 @@ void EspWebServer::onUpdate(AsyncWebServerRequest *request, JsonVariant &json)
     serializeJson(json, Serial);
     Serial.println();
 
-    DynamicJsonDocument jsonDoc(MAX_HTTP_POST_JSON_BODY_SIZE);
+    JsonDocument jsonDoc;
 
     if (json.is<JsonArray>())
     {
@@ -97,7 +129,7 @@ void EspWebServer::onOverrideLedColor(AsyncWebServerRequest *request, JsonVarian
     serializeJson(json, Serial);
     Serial.println();
 
-    DynamicJsonDocument jsonDoc(MAX_HTTP_POST_JSON_BODY_SIZE);
+    JsonDocument jsonDoc;
 
     if (json.is<JsonArray>())
     {
@@ -218,7 +250,7 @@ void EspWebServer::broadcastWs(const char *payload)
     ws.textAll(payload);
 }
 
-void EspWebServer::onBambuPrinterData(DynamicJsonDocument jsonDoc)
+void EspWebServer::onBambuPrinterData(JsonDocument jsonDoc)
 {
     String jsonString = getAllConfigAndStatusAsString();
     // String jsonString;
@@ -228,7 +260,7 @@ void EspWebServer::onBambuPrinterData(DynamicJsonDocument jsonDoc)
 
 String EspWebServer::getAllConfigAndStatusAsString()
 {
-    DynamicJsonDocument json(2048);
+    JsonDocument json;
     systemConfig->toJson(json);
     printerConfig->toJson(json);
     printerStatus->toJson(json);

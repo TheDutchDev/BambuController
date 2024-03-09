@@ -38,7 +38,7 @@ void BentoBox::stopIfTimeExpired()
     stop();
 }
 
-void BentoBox::onBambuPrinterData(DynamicJsonDocument json)
+void BentoBox::onBambuPrinterData(JsonDocument json)
 {
     // Only turn on bento box for non-PLA filament types
     if (_printerStatus->filamentStatus->type == EFilamentType::PLA)

@@ -7,14 +7,15 @@ Ota::Ota()
       _doUpdate(false),
       _lastMessageAtMs(0)
 {
-    // CryptoMemAsset *MyPubKey = new CryptoMemAsset("RSA Key", public_key, strlen(public_key) + 1);
 }
 
 void Ota::setup()
 {
     _fota.setManifestURL("https://raw.githubusercontent.com/thedutchdev/bambu-controller/master/firmware.json");
     _fota.setRootCA(_rootCA);
-    // FOTA.setPubKey(MyPubKey);
+
+    // CryptoMemAsset *MyPubKey = new CryptoMemAsset("RSA Key", public_key, strlen(public_key) + 1);
+    // _fota.setPubKey(MyPubKey);
 
     _fota.setUpdateBeginFailCb(std::bind(&Ota::updateBeginFailCallback, this, _1));
     _fota.setProgressCb(std::bind(&Ota::progressCallback, this, _1, _2));
@@ -62,7 +63,7 @@ void Ota::updateCheckFailCallback(int partition, int error_code)
 
 void Ota::sendProgressUpdate(float progressPct)
 {
-    StaticJsonDocument<256> json;
+    JsonDocument json;
     json["msg"].set("ota_progress");
     json["progress"].set(round(progressPct));
 
@@ -73,7 +74,7 @@ void Ota::sendProgressUpdate(float progressPct)
 
 void Ota::sendProgressFinished()
 {
-    StaticJsonDocument<256> json;
+    JsonDocument json;
     json["msg"] = "ota_finished";
 
     String jsonString;
