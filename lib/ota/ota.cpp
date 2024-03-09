@@ -11,7 +11,7 @@ Ota::Ota()
 
 void Ota::setup()
 {
-    _fota.setManifestURL("https://raw.githubusercontent.com/thedutchdev/bambu-controller/master/firmware.json");
+    _fota.setManifestURL("https://raw.githubusercontent.com/TheDutchDev/BambuController/master/firmware.json");
     _fota.setRootCA(_rootCA);
 
     // CryptoMemAsset *MyPubKey = new CryptoMemAsset("RSA Key", public_key, strlen(public_key) + 1);
@@ -84,9 +84,9 @@ void Ota::sendProgressFinished()
 
 void Ota::loop()
 {
-//    if (!_doUpdate)
-//        return;
+    if (!_doUpdate)
+        return;
 
     _fota.handle();
-//    _doUpdate = false;
+    _doUpdate = false;
 }
