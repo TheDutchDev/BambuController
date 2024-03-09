@@ -13,7 +13,7 @@ bool FileSystem::save()
     Serial.println("Saving to filesystem...");
 
     JsonDocument json = writeJson();
-    File file = LittleFS.open(filePath, "w", true);
+    File file = SPIFFS.open(filePath, "w", true);
 
     if (!file)
     {
@@ -31,7 +31,7 @@ bool FileSystem::load()
 {
     Serial.println("Loading filesystem");
 
-    File file = LittleFS.open(filePath, "r");
+    File file = SPIFFS.open(filePath, "r");
 
     if (!file)
     {
@@ -56,7 +56,7 @@ bool FileSystem::load()
         Serial.println("Failed loading config");
         Serial.println("Clearing config");
         file.close();
-        LittleFS.remove(filePath);
+        SPIFFS.remove(filePath);
         return false;
     }
 
@@ -68,13 +68,13 @@ bool FileSystem::load()
 void FileSystem::erase()
 {
     Serial.println("Erasing filesystem...");
-    LittleFS.remove(filePath);
+    SPIFFS.remove(filePath);
 }
 
 bool FileSystem::mount()
 {
     Serial.println("Mounting filesystem...");
-    if (!LittleFS.begin(true))
+    if (!SPIFFS.begin(true))
     {
         Serial.println("Failed to mount filesystem!");
         return false;

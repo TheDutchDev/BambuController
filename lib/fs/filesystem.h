@@ -2,7 +2,7 @@
 #define FILESYSTEM_H
 
 #include <Arduino.h>
-#include <LittleFS.h>
+#include <SPIFFS.h>
 #include "FS.h"
 #include <config.h>
 #include <defs.h>

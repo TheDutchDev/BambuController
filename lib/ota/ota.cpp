@@ -4,7 +4,7 @@
 Ota::Ota()
     : _fota(HARDWARE_VERSION, FIRMWARE_VERSION, true),
       _rootCA(new CryptoMemAsset("Root CA", rootCA, strlen(rootCA) + 1)),
-      _doUpdate(false),
+      _doUpdate(true),
       _lastMessageAtMs(0)
 {
 }
@@ -84,9 +84,9 @@ void Ota::sendProgressFinished()
 
 void Ota::loop()
 {
-    if (!_doUpdate)
-        return;
+//    if (!_doUpdate)
+//        return;
 
     _fota.handle();
-    _doUpdate = false;
+//    _doUpdate = false;
 }

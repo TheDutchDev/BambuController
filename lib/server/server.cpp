@@ -22,7 +22,7 @@ void EspWebServer::begin()
 
 
     // Use to serve static HTML over filesystem. Not recommended for OTA
-//    server.serveStatic("/", LittleFS, "/www/").setDefaultFile("index.html");
+//    server.serveStatic("/", SPIFFS, "/www/").setDefaultFile("index.html");
 
     server.on("/", HTTP_GET, std::bind(&EspWebServer::onMainPage, this, _1));
     server.on("/api/info", HTTP_GET, std::bind(&EspWebServer::onApiInfo, this, _1));

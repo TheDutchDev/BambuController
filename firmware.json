@@ -1,8 +1,8 @@
 [
     {
         "type": "esp32dev",
-        "version": "1.0.0",
-        "url": "https://raw.githubusercontent.com/TheDutchDev/bambucontroller/master/releases/esp32dev-1.0.0.bin",
+        "version": "1.1.0",
+        "url": "https://raw.githubusercontent.com/TheDutchDev/bambucontroller/master/releases/esp32dev-1.1.0.bin",
         "changelog": "## Version 1.0.0\n\n* Implemented MQTT connection to bambu printers\n* Implemented LED functionality\n* Implemented HTTP & Websocket server\n* Implemented Wifi connectivity\n* Implemented Filesystem operations\n"
     }
 ]

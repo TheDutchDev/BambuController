@@ -5,7 +5,6 @@
 #include <ArduinoJson.h>
 #include "defs.h"
 #include <WiFi.h>
-#include <LittleFS.h>
 #include <AsyncTCP.h>
 #include "AsyncJson.h"
 #include <config.h>
